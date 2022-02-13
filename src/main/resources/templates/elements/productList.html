@@ -1,34 +1,39 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <div id="list">
-    <table class="table table-striped mx-auto">
+    <table class="table mx-auto">
         <thead>
         <tr>
             <th scope="col">#</th>
             <th scope="col">TITLE</th>
             <th scope="col">MANUFACTURER</th>
             <th scope="col">PRICE</th>
+            <th scope="col">STATUS</th>
             <th scope="col">QUANTITY</th>
             <th scope="col">ADD TO CART</th>
         </tr>
         </thead>
         <tbody>
         <th:block th:each="product, index : ${list}">
-                <tr>
-                    <th scope="row" th:text="${index.count}"></th>
-                    <td><a th:href="@{/app/products/{id}(id=${product.id})}" th:text="${product.title}"></a></td>
-                    <td th:text="${product.manufacturer}"></td>
-                    <td th:text="${product.cost}"></td>
-                    <form method="post" action="/app/addtocart">
-                        <td>
-                            <div class="mb-3">
-                                <input type="text" class="form-control" name="min" placeholder="0"/>
-                            </div>
-                        </td>
-                        <td>
-                            <button type="submit" class="btn btn-primary">ADD</button>
-                        </td>
-                    </form>
-                </tr>
+            <tr>
+                <th scope="row" th:text="${index.count}"></th>
+                <td><a th:href="@{/app/products/{id}(id=${product.id})}" th:text="${product.title}"></a></td>
+                <td th:text="${product.manufacturer}"></td>
+                <td th:text="${product.cost}"></td>
+                <td th:if="${product.status == T(ru.kuranov.lesson8thymeleaf.entity.Status).INACTIVE}">cvbvv</td>
+                <form method="post" action="/app/addtocart">
+                    <td>
+                        <div class="mb-3">
+                            <input type="text" class="form-control" name="min" placeholder="0"/>
+                        </div>
+                    </td>
+                    <td>
+                        <button type="submit" class="btn btn-primary">ADD</button>
+                    </td>
+                </form>
+            </tr>
+<!--            <tr th:if="${product.status}">-->
+<!--                <td><p>ПРОВЕРКА</p></td>-->
+<!--            </tr>-->
             </th:each>
         </th:block>
         </tbody>
