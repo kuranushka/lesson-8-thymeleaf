@@ -43,12 +43,12 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Product> findAllPagingAndSortingAndFiltering(Integer currentPage, Integer productsOnPage, Long min, Long max, String direction) {
+    public Page<Product> findAllPagingAndSortingAndFiltering(Integer page, Integer productsOnPage, Long min, Long max, String sort) {
         Pageable pageable;
-        if (direction.equals("asc")) {
-            pageable = PageRequest.of(currentPage, productsOnPage, Sort.by("cost").ascending());
+        if (sort.equals("asc")) {
+            pageable = PageRequest.of(page, productsOnPage, Sort.by("cost").ascending());
         } else {
-            pageable = PageRequest.of(currentPage, productsOnPage, Sort.by("cost").descending());
+            pageable = PageRequest.of(page, productsOnPage, Sort.by("cost").descending());
         }
         return productRepo.findAllPagingAndSortingAndFiltering(pageable, min, max);
     }

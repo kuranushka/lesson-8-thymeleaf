@@ -2,6 +2,7 @@ package ru.kuranov.lesson8thymeleaf.util;
 
 
 import lombok.Getter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import ru.kuranov.lesson8thymeleaf.service.ProductService;
 
@@ -10,16 +11,18 @@ import java.util.Optional;
 @Component
 @Getter
 public class FilterSolver {
-    private Long minProductCost;
-    private Long maxProductCost;
-    private Long minMemory;
-    private Long maxMemory;
+    private Long minAllProductsCost;
+    private Long maxAllProductsCost;
+    private Long minMemoryCost;
+    private Long maxMemoryCost;
     private String sortDirection;
-    private boolean isMinMemorized;
-    private boolean isMaxMemorized;
+    private boolean isMinCostMemorized;
+    private boolean isMaxCostMemorized;
     private Integer productsOnPageMemorized;
     private final ProductService productService;
     private boolean isProductsOnPageMemorized;
+    @Value("${products.on.page}")
+    private int DEFAULT_PRODUCTS_ON_PAGE;
 
 
     public FilterSolver(ProductService productService) {
@@ -29,32 +32,32 @@ public class FilterSolver {
 
     public Long checkingMinFilterCost(Optional<Long> optionalMin) {
         updateCosts();
-        if ((optionalMin.isEmpty() || optionalMin.get() < minProductCost) && !isMinMemorized) {
-            minMemory = minProductCost;
-            isMinMemorized = true;
-            return minMemory;
+        if ((optionalMin.isEmpty() || optionalMin.get() < minAllProductsCost) && !isMinCostMemorized) {
+            minMemoryCost = minAllProductsCost;
+            isMinCostMemorized = true;
+            return minMemoryCost;
         } else if (optionalMin.isEmpty()) {
-            return minMemory;
-        } else if (optionalMin.get() != minMemory) {
-            minMemory = optionalMin.get();
-            return minMemory;
+            return minMemoryCost;
+        } else if (!optionalMin.get().equals(minMemoryCost)) {
+            minMemoryCost = optionalMin.get();
+            return minMemoryCost;
         } else {
-            return minMemory;
+            return minMemoryCost;
         }
     }
 
     public Long checkingMaxFilterCost(Optional<Long> optionalMax) {
-        if ((optionalMax.isEmpty() || optionalMax.get() > maxProductCost) && !isMaxMemorized) {
-            maxMemory = maxProductCost;
-            isMaxMemorized = true;
-            return maxMemory;
+        if ((optionalMax.isEmpty() || optionalMax.get() > maxAllProductsCost) && !isMaxCostMemorized) {
+            maxMemoryCost = maxAllProductsCost;
+            isMaxCostMemorized = true;
+            return maxMemoryCost;
         } else if (optionalMax.isEmpty()) {
-            return maxMemory;
-        } else if (optionalMax.get() != maxMemory) {
-            maxMemory = optionalMax.get();
-            return maxMemory;
+            return maxMemoryCost;
+        } else if (!optionalMax.get().equals(maxMemoryCost)) {
+            maxMemoryCost = optionalMax.get();
+            return maxMemoryCost;
         } else {
-            return maxMemory;
+            return maxMemoryCost;
         }
     }
 
@@ -69,28 +72,29 @@ public class FilterSolver {
     }
 
     private void updateCosts() {
-        minProductCost = productService.findMinCost();
-        maxProductCost = productService.findMaxCost();
+        minAllProductsCost = productService.findMinCost();
+        maxAllProductsCost = productService.findMaxCost();
     }
 
     public void resetFilter(Boolean resetFilter) {
         if (resetFilter) {
-            minMemory = 0L;
-            maxMemory = 0L;
-            isMinMemorized = false;
-            isMaxMemorized = false;
+            minMemoryCost = 0L;
+            maxMemoryCost = 0L;
+            isMinCostMemorized = false;
+            isMaxCostMemorized = false;
             isProductsOnPageMemorized = false;
+            sortDirection = "asc";
         }
     }
 
-    public void productsOnPageMemory(Optional<Integer> productsOnPageOptional) {
+    public void memoryProductsOnPage(Optional<Integer> productsOnPageOptional) {
         if (productsOnPageOptional.isEmpty()){
             if (isProductsOnPageMemorized) {
                 return;
             }
-            productsOnPageMemorized = 10;
+            productsOnPageMemorized = DEFAULT_PRODUCTS_ON_PAGE;
             isProductsOnPageMemorized = true;
-        } else if (productsOnPageOptional.get() == productsOnPageMemorized) {
+        } else if (productsOnPageOptional.get().equals(productsOnPageMemorized)) {
             return;
         } else {
             productsOnPageMemorized = productsOnPageOptional.get();

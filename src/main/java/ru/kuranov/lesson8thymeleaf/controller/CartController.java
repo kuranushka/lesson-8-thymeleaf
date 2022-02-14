@@ -35,8 +35,8 @@ public class CartController {
     @GetMapping("/app/products/cart")
     public String cart(Model model) {
         Map<Product, Long> products = cartService.getCartProducts();
-        model.addAttribute("products", products);
         updateTotalCost(model);
+        model.addAttribute("products", products);
         return "cart";
     }
 
@@ -47,8 +47,8 @@ public class CartController {
                            Model model) {
         if (quantity > 0 && productId >= 0) {
             Map<Product, Long> products = cartService.updateCart(productId, quantity);
-            model.addAttribute("products", products);
             updateTotalCost(model);
+            model.addAttribute("products", products);
             return "cart";
         } else {
             return "redirect:/app/products/cart";
@@ -63,11 +63,10 @@ public class CartController {
 
     @GetMapping("/app/products/savecart")
     public String saveCart(Model model) {
-        cartService.saveCart();
-        BigDecimal totalCost = cartService.getTotalCost();
-        if (totalCost.equals(0)) {
+        if (cartService.getCartProducts().isEmpty()) {
             model.addAttribute("message", "CART IS EMPTY... NOTHING TO SAVE");
         } else {
+            cartService.saveCart();
             model.addAttribute("message", "THANK YOU!");
         }
         return "cartWasSaved";
@@ -76,7 +75,7 @@ public class CartController {
 
     @ModelAttribute
     private void updateTotalCost(Model model) {
-        BigDecimal totalCost = cartService.getTotalCost();
+        BigDecimal totalCost = cartService.getTotalCartCost();
         model.addAttribute("totalCost", totalCost);
     }
 }

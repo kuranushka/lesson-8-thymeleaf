@@ -38,6 +38,7 @@ public class ProductController {
         Optional<Product> product = productService.findById(id);
         if (product.isPresent()) {
             productService.deleteById(id);
+            filterSolver.resetFilter(true);
             return "redirect:/app/products";
         } else {
             return "404";

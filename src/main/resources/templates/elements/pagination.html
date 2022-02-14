@@ -1,24 +1,27 @@
 <nav aria-label="..." id="pagination">
     <ul class="pagination">
         <th:block>
-            <li class="page-item" th:if="${currentPage} > 0">
-                <a class="page-link" th:href="@{/app/products(currentPage=${currentPage} - 1)}">Previous</a>
+            <li class="page-item" th:if="${page} > 0">
+                <a class="page-link" th:href="@{/app/products(page=${page} - 1)}">Previous</a>
             </li>
-            <li class="page-item disabled" th:unless="${currentPage} > 0">
+            <li class="page-item disabled" th:unless="${page} > 0">
                 <a class="page-link" href="#">Previous</a>
             </li>
-            <li class="page-item" th:if="${currentPage} > 0">
-                <a class="page-link" th:text="${currentPage}" th:href="@{/app/products(currentPage=${currentPage} - 1)}"></a>
+            <li class="page-item" th:if="${page} > 0">
+                <a class="page-link" th:text="${page}" th:href="@{/app/products(page=${page} - 1)}"></a>
             </li>
             <li class="page-item active">
-                <a class="page-link" th:text="${currentPage} + 1"
-                   th:href="@{/app/products(currentPage=${currentPage})}"></a>
+                <a class="page-link" th:text="${page} + 1"
+                   th:href="@{/app/products(page=${page})}"></a>
             </li>
-            <li class="page-item" th:if="(${currentPage} + 1) < ${totalPages}">
-                <a class="page-link" th:text="${currentPage} + 2" th:href="@{/app/products(currentPage=${currentPage} + 1)}"></a>
+            <li class="page-item" th:if="(${page} + 1) < ${totalPages}">
+                <a class="page-link" th:text="${page} + 2" th:href="@{/app/products(page=${page} + 1)}"></a>
             </li>
-            <li class="page-item" th:if="(${currentPage} + 1) < ${totalPages}">
-                <a class="page-link" th:href="@{/app/products(currentPage=${currentPage} + 1)}">Next</a>
+            <li class="page-item" th:if="(${page} + 1) < ${totalPages}">
+                <a class="page-link" th:href="@{/app/products(page=${page} + 1)}">Next</a>
+            </li>
+            <li class="page-item disabled" th:unless="(${page} + 1) < ${totalPages}">
+                <a class="page-link" th:href="@{/app/products(page=${page} + 1)}">Next</a>
             </li>
         </th:block>
     </ul>

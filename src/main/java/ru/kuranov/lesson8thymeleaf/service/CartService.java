@@ -19,41 +19,41 @@ import java.util.Map;
 public class CartService {
     private final CartRepository cartRepository;
     private final ProductService productService;
-    private Map<Long, Long> products;
-    private BigDecimal totalCost;
+    private Map<Long, Long> productsInCart;
+    private BigDecimal totalCartCost;
 
     public CartService(CartRepository cartRepository, ProductService productService) {
         this.cartRepository = cartRepository;
         this.productService = productService;
-        products = new HashMap<>();
-        totalCost = BigDecimal.valueOf(0);
+        productsInCart = new HashMap<>();
+        totalCartCost = BigDecimal.valueOf(0);
     }
 
     public void saveCart() {
         Cart cart = Cart.builder()
-                .totalCost(totalCost)
+                .totalCost(totalCartCost)
                 .products(getCartProducts())
                 .status(Status.ACTIVE)
                 .build();
         cartRepository.save(cart);
-        products.clear();
-        totalCost = BigDecimal.valueOf(0);
+        productsInCart.clear();
+        totalCartCost = BigDecimal.valueOf(0);
     }
 
     public void addProductToCart(Long productId, Long quantity) {
         if (productId <= 0) {
             return;
         }
-        if (products.containsKey(productId)) {
-            products.replace(productId, products.get(productId) + quantity);
+        if (productsInCart.containsKey(productId)) {
+            productsInCart.replace(productId, productsInCart.get(productId) + quantity);
         } else {
-            products.put(productId, quantity);
+            productsInCart.put(productId, quantity);
         }
         updateTotalCost();
     }
 
     public Map<Product, Long> updateCart(Long productId, Long quantity) {
-        for (Map.Entry<Long, Long> entry : products.entrySet()) {
+        for (Map.Entry<Long, Long> entry : productsInCart.entrySet()) {
             if (entry.getKey().equals(productId)) {
                 entry.setValue(quantity);
             }
@@ -63,9 +63,9 @@ public class CartService {
     }
 
     public void deleteProductFromCart(Long productToDelete) {
-        for (Map.Entry<Long, Long> entry : products.entrySet()) {
+        for (Map.Entry<Long, Long> entry : productsInCart.entrySet()) {
             if (entry.getKey().equals(productToDelete)) {
-                products.remove(entry.getKey());
+                productsInCart.remove(entry.getKey());
             }
         }
         updateTotalCost();
@@ -75,8 +75,8 @@ public class CartService {
         Map<Product, Long> cartProducts = new HashMap<>();
         List<Product> allProducts = productService.findAll();
         for (Product product : allProducts) {
-            if (products.containsKey(product.getId())) {
-                Long quantity = products.get(product.getId());
+            if (productsInCart.containsKey(product.getId())) {
+                Long quantity = productsInCart.get(product.getId());
                 cartProducts.put(product, quantity);
             }
         }
@@ -85,12 +85,12 @@ public class CartService {
 
     public void updateTotalCost() {
         Map<Product, Long> products = getCartProducts();
-        totalCost = BigDecimal.valueOf(0);
+        totalCartCost = BigDecimal.valueOf(0);
         for (Map.Entry<Product, Long> entry : products.entrySet()) {
             BigDecimal cost = entry.getKey().getCost();
             Long productQuantity = entry.getValue();
-            BigDecimal summ = cost.multiply(BigDecimal.valueOf(productQuantity));
-            totalCost = totalCost.add(summ);
+            BigDecimal fullProductCost = cost.multiply(BigDecimal.valueOf(productQuantity));
+            totalCartCost = totalCartCost.add(fullProductCost);
         }
     }
 }
