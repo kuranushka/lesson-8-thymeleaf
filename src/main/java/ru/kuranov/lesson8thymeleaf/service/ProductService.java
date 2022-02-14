@@ -12,7 +12,6 @@ import ru.kuranov.lesson8thymeleaf.repository.ProductRepo;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class ProductService {
@@ -24,16 +23,13 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
+    List<Product> findAll() {
+        return productRepo.findAll();
+    }
+
+    @Transactional(readOnly = true)
     public Optional<Product> findById(Long id) {
         return productRepo.findById(id);
-    }
-
-    public void save(Product product) {
-        productRepo.save(product);
-    }
-
-    public void deleteById(Long id) {
-        productRepo.deleteById(id);
     }
 
     @Transactional(readOnly = true)
@@ -57,8 +53,11 @@ public class ProductService {
         return productRepo.findAllPagingAndSortingAndFiltering(pageable, min, max);
     }
 
-    @Transactional(readOnly = true)
-    public List<Product> findAllByIdIn(Set<Long> ids) {
-        return productRepo.findAllByIdIn(ids);
+    public void save(Product product) {
+        productRepo.save(product);
+    }
+
+    public void deleteById(Long id) {
+        productRepo.deleteById(id);
     }
 }

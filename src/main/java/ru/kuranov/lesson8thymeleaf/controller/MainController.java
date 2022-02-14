@@ -55,9 +55,6 @@ public class MainController {
         List<Product> productList = productPages.getContent();
         model.addAttribute("list", productList);
 
-//        Product product = Product.builder().build();
-//        model.addAttribute("product", product);
-
         Long minCost = productService.findMinCost();
         Long maxCost = productService.findMaxCost();
         model.addAttribute("minCost", minCost);
@@ -74,6 +71,4 @@ public class MainController {
         productService.save(product);
         return "redirect:/app/products";
     }
-
-
 }
