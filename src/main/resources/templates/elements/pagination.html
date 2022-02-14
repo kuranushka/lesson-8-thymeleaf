@@ -1,0 +1,22 @@
+<nav aria-label="..." id="pagination">
+    <ul class="pagination">
+        <th:block>
+            <li class="page-item" th:if="${currentPage} > 0">
+                <a class="page-link" th:href="@{/app/products(currentPage=${currentPage} - 1)}">Previous</a>
+            </li>
+            <li class="page-item" th:if="${currentPage} > 0">
+                <a class="page-link" th:text="${currentPage}" th:href="@{/app/products(currentPage=${currentPage} - 1)}"></a>
+            </li>
+            <li class="page-item active">
+                <a class="page-link" th:text="${currentPage} + 1"
+                   th:href="@{/app/products(currentPage=${currentPage})}"></a>
+            </li>
+            <li class="page-item" th:if="(${currentPage} + 1) < ${totalPages}">
+                <a class="page-link" th:text="${currentPage} + 2" th:href="@{/app/products(currentPage=${currentPage} + 1)}"></a>
+            </li>
+            <li class="page-item" th:if="(${currentPage} + 1) < ${totalPages}">
+                <a class="page-link" th:href="@{/app/products(currentPage=${currentPage} + 1)}">Next</a>
+            </li>
+        </th:block>
+    </ul>
+</nav>

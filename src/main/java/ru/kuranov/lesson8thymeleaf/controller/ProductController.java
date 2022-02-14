@@ -1,72 +1,25 @@
 package ru.kuranov.lesson8thymeleaf.controller;
 
-
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import ru.kuranov.lesson8thymeleaf.entity.Product;
-import ru.kuranov.lesson8thymeleaf.entity.Status;
 import ru.kuranov.lesson8thymeleaf.service.ProductService;
-import ru.kuranov.lesson8thymeleaf.util.ViewTemplate;
+import ru.kuranov.lesson8thymeleaf.util.FilterSolver;
 
-import java.util.List;
 import java.util.Optional;
 
 @Controller
 public class ProductController {
 
     private final ProductService productService;
-    private final ViewTemplate viewTemplate;
+    private final FilterSolver filterSolver;
 
-
-    public ProductController(ProductService productService, ViewTemplate viewTemplate) {
+    public ProductController(ProductService productService, FilterSolver filterSolver) {
         this.productService = productService;
-        this.viewTemplate = viewTemplate;
-
-    }
-
-    @GetMapping("/app/products")
-    public String allProducts(Model model,
-                              @RequestParam Optional<String> sort,
-                              @RequestParam Optional<Long> min,
-                              @RequestParam Optional<Long> max,
-                              @RequestParam(name = "resetFilter", required = false, defaultValue = "false") Boolean resetFilter,
-                              @RequestParam(name = "currentPage", required = false, defaultValue = "0") Integer currentPage) {
-
-        viewTemplate.resetFilter(resetFilter);
-
-        Long minFilterCost = viewTemplate.checkingMinFilterCost(min);
-        Long maxFilterCost = viewTemplate.checkingMaxFilterCost(max);
-        String sortDirection = viewTemplate.getSortDirection(sort);
-
-        Page<Product> productPages = productService
-                .findAllPagingAndSortingAndFiltering(currentPage, minFilterCost, maxFilterCost, sortDirection);
-        Long totalPages = productPages.getTotalElements();
-        model.addAttribute("totalPages", totalPages);
-
-        List<Product> productList = productPages.getContent();
-        model.addAttribute("list", productList);
-
-        Product product = Product.builder().build();
-        model.addAttribute("product", product);
-
-        Long minCost = productService.findMinCost();
-        Long maxCost = productService.findMaxCost();
-        model.addAttribute("minCost", minCost);
-        model.addAttribute("maxCost", maxCost);
-        model.addAttribute("minFilterCost", minFilterCost);
-        model.addAttribute("maxFilterCost", maxFilterCost);
-
-
-        return "all";
-    }
-
-    @PostMapping("/app/products")
-    public String addProduct(@ModelAttribute Product product) {
-        product.setStatus(Status.ACTIVE);
-        productService.save(product);
-        return "redirect:/app/products";
+        this.filterSolver = filterSolver;
     }
 
     @GetMapping("/app/products/{id}")
@@ -74,14 +27,14 @@ public class ProductController {
         Optional<Product> product = productService.findById(id);
         if (product.isPresent()) {
             model.addAttribute("product", product.get());
-            return "product";
+            return "viewProduct";
         } else {
             return "404";
         }
     }
 
     @GetMapping("/app/products/delete/{id}")
-    public String deleteById(@PathVariable Long id) {
+    public String deleteProduct(@PathVariable Long id) {
         Optional<Product> product = productService.findById(id);
         if (product.isPresent()) {
             productService.deleteById(id);
@@ -90,4 +43,37 @@ public class ProductController {
             return "404";
         }
     }
+
+    @GetMapping("/app/products/edit/{id}")
+    public String editProduct(@PathVariable Long id, Model model) {
+        Optional<Product> product = productService.findById(id);
+        if (product.isPresent()) {
+            model.addAttribute("product", product.get());
+            return "editProduct";
+        } else {
+            return "404";
+        }
+    }
+
+    @PostMapping("/app/products/edit/{id}")
+    public String edit(Product product) {
+        productService.save(product);
+        filterSolver.resetFilter(true);
+        return "redirect:/app/products";
+    }
+
+    @GetMapping("/app/products/add")
+    public String addProduct(Model model) {
+        Product product = Product.builder().build();
+        model.addAttribute("product", product);
+        return "addProduct";
+    }
+
+    @PostMapping("/app/products/add")
+    public String addProduct(Product product) {
+        productService.save(product);
+        filterSolver.resetFilter(true);
+        return "redirect:/app/products";
+    }
+
 }

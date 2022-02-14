@@ -9,19 +9,19 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kuranov.lesson8thymeleaf.entity.Product;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
-public interface ProductRepo extends JpaRepository<Product, Long>, PagingAndSortingRepository<Product, Long> {
+public interface ProductRepo extends JpaRepository<Product, Long> {
 
-    @Transactional(readOnly = true)
     Optional<Product> findById(Long id);
 
-    @Transactional(readOnly = true)
     @Query(value = "select min(cost) from product", nativeQuery = true)
     Long findMinCost();
 
-    @Transactional(readOnly = true)
+
     @Query(value = "select max(cost) from product", nativeQuery = true)
     Long findMaxCost();
 
@@ -29,4 +29,7 @@ public interface ProductRepo extends JpaRepository<Product, Long>, PagingAndSort
 
     @Query(value="select * from Product p where p.cost between :min and :max", nativeQuery = true)
     Page<Product> findAllPagingAndSortingAndFiltering(Pageable pageable, Long min, Long max);
+
+
+    List<Product> findAllByIdIn(Set<Long> ids);
 }

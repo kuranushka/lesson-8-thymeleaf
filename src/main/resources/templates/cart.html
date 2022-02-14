@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en"xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>CART</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+</head>
+<body>
+<div th:insert="/elements/header :: #header"></div>
+
+<table class="table mx-auto">
+    <thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">TITLE</th>
+        <th scope="col">MANUFACTURER</th>
+        <th scope="col">PRICE</th>
+        <th scope="col">QUANTITY</th>
+        <th scope="col">ADD TO CART</th>
+    </tr>
+    </thead>
+    <tbody>
+    <th:block th:each="product, index : ${products}">
+        <tr>
+            <th scope="row" th:text="${index.count}"></th>
+            <td><a th:href="@{/app/products/{id}(id=${product.id})}" th:text="${product.title}"></a></td>
+            <td th:text="${product.manufacturer}"></td>
+            <td th:text="${product.cost}"></td>
+
+            <form  th:if="${product.status == T(ru.kuranov.lesson8thymeleaf.entity.Status).ACTIVE}" method="post" action="/app/products/addtocart">
+                <td>
+                    <div class="mb-3">
+                        <input type="text" class="form-control" name="quantity" placeholder="0"/>
+                        <input type="hidden" name="productId" th:value="${product.id}">
+                    </div>
+                </td>
+                <td>
+                    <button type="submit" class="btn btn-primary">ADD</button>
+                </td>
+            </form>
+
+
+
+            <td th:if="${product.status == T(ru.kuranov.lesson8thymeleaf.entity.Status).INACTIVE}">
+                <p>TEMPORARILY NOT AVAILABLE</p>
+            </td>
+            <td></td>
+        </tr>
+        </th:each>
+    </th:block>
+    </tbody>
+</table>
+
+
+<div th:insert="/elements/footer :: #footer"></div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
+</html>

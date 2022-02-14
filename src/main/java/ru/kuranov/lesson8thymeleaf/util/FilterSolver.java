@@ -1,13 +1,15 @@
 package ru.kuranov.lesson8thymeleaf.util;
 
 
+import lombok.Getter;
 import org.springframework.stereotype.Component;
 import ru.kuranov.lesson8thymeleaf.service.ProductService;
 
 import java.util.Optional;
 
 @Component
-public class ViewTemplate {
+@Getter
+public class FilterSolver {
     private Long minProductCost;
     private Long maxProductCost;
     private Long minMemory;
@@ -15,9 +17,12 @@ public class ViewTemplate {
     private String sortDirection;
     private boolean isMinMemorized;
     private boolean isMaxMemorized;
+    private Integer productsOnPageMemorized;
     private final ProductService productService;
+    private boolean isProductsOnPageMemorized;
 
-    public ViewTemplate(ProductService productService) {
+
+    public FilterSolver(ProductService productService) {
         this.productService = productService;
         sortDirection = "asc";
     }
@@ -74,6 +79,22 @@ public class ViewTemplate {
             maxMemory = 0L;
             isMinMemorized = false;
             isMaxMemorized = false;
+            isProductsOnPageMemorized = false;
+        }
+    }
+
+    public void productsOnPageMemory(Optional<Integer> productsOnPageOptional) {
+        if (productsOnPageOptional.isEmpty()){
+            if (isProductsOnPageMemorized) {
+                return;
+            }
+            productsOnPageMemorized = 10;
+            isProductsOnPageMemorized = true;
+        } else if (productsOnPageOptional.get() == productsOnPageMemorized) {
+            return;
+        } else {
+            productsOnPageMemorized = productsOnPageOptional.get();
+            isProductsOnPageMemorized = true;
         }
     }
 }

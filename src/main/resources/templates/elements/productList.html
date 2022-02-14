@@ -7,7 +7,6 @@
             <th scope="col">TITLE</th>
             <th scope="col">MANUFACTURER</th>
             <th scope="col">PRICE</th>
-            <th scope="col">STATUS</th>
             <th scope="col">QUANTITY</th>
             <th scope="col">ADD TO CART</th>
         </tr>
@@ -19,21 +18,26 @@
                 <td><a th:href="@{/app/products/{id}(id=${product.id})}" th:text="${product.title}"></a></td>
                 <td th:text="${product.manufacturer}"></td>
                 <td th:text="${product.cost}"></td>
-                <td th:if="${product.status == T(ru.kuranov.lesson8thymeleaf.entity.Status).INACTIVE}">cvbvv</td>
-                <form method="post" action="/app/addtocart">
+
+                <form  th:if="${product.status == T(ru.kuranov.lesson8thymeleaf.entity.Status).ACTIVE}" method="post" action="/app/products/addtocart">
                     <td>
                         <div class="mb-3">
-                            <input type="text" class="form-control" name="min" placeholder="0"/>
+                            <input type="text" class="form-control" name="quantity" placeholder="0"/>
+                            <input type="hidden" name="productId" th:value="${product.id}">
                         </div>
                     </td>
                     <td>
                         <button type="submit" class="btn btn-primary">ADD</button>
                     </td>
                 </form>
+
+
+
+                <td th:if="${product.status == T(ru.kuranov.lesson8thymeleaf.entity.Status).INACTIVE}">
+                    <p>TEMPORARILY NOT AVAILABLE</p>
+                </td>
+                <td></td>
             </tr>
-<!--            <tr th:if="${product.status}">-->
-<!--                <td><p>ПРОВЕРКА</p></td>-->
-<!--            </tr>-->
             </th:each>
         </th:block>
         </tbody>
