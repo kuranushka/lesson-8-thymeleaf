@@ -5,9 +5,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import ru.kuranov.lesson8thymeleaf.controller.util.FilterSolver;
 import ru.kuranov.lesson8thymeleaf.entity.Product;
 import ru.kuranov.lesson8thymeleaf.service.ProductService;
-import ru.kuranov.lesson8thymeleaf.util.FilterSolver;
 
 import java.util.Optional;
 

@@ -11,6 +11,7 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.Objects;
 
 @Entity
 @NoArgsConstructor
@@ -57,4 +58,17 @@ public class Cart {
     @LastModifiedDate
     @Column(name = "last_modify_date")
     private LocalDateTime lastModifyDate;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Cart cart = (Cart) o;
+        return version == cart.version && id.equals(cart.id) && totalCost.equals(cart.totalCost) && status == cart.status && Objects.equals(products, cart.products) && Objects.equals(createdBy, cart.createdBy) && Objects.equals(createdDate, cart.createdDate) && Objects.equals(lastModifyBy, cart.lastModifyBy) && Objects.equals(lastModifyDate, cart.lastModifyDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, totalCost, status, products, version, createdBy, createdDate, lastModifyBy, lastModifyDate);
+    }
 }

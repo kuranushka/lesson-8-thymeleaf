@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import ru.kuranov.lesson8thymeleaf.controller.util.FilterSolver;
 import ru.kuranov.lesson8thymeleaf.entity.Product;
 import ru.kuranov.lesson8thymeleaf.entity.Status;
 import ru.kuranov.lesson8thymeleaf.service.ProductService;
-import ru.kuranov.lesson8thymeleaf.util.FilterSolver;
 
 import java.util.List;
 import java.util.Optional;

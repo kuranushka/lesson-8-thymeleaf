@@ -1,23 +1,24 @@
-package ru.kuranov.lesson8thymeleaf.util;
+package ru.kuranov.lesson8thymeleaf.controller.util;
 
 
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import ru.kuranov.lesson8thymeleaf.service.ProductService;
 
 import java.util.Optional;
 
-@Component
+@Service
 @Getter
 public class FilterSolver {
     private Long minAllProductsCost;
     private Long maxAllProductsCost;
     private Long minMemoryCost;
     private Long maxMemoryCost;
-    private String sortDirection;
     private boolean isMinCostMemorized;
     private boolean isMaxCostMemorized;
+    private String sortDirection;
     private Integer productsOnPageMemorized;
     private final ProductService productService;
     private boolean isProductsOnPageMemorized;

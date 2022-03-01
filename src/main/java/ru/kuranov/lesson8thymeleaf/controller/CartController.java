@@ -24,7 +24,10 @@ public class CartController {
     }
 
     @PostMapping("/app/products/addtocart")
-    public String addToCart(@RequestParam Long productId, @RequestParam Long quantity) {
+    public String addToCart(@RequestParam Long productId, @RequestParam(name = "quantity", required = false) Long quantity) {
+        if (quantity == null || quantity == 0) {
+            return "redirect:/app/products";
+        }
         Optional<Product> product = productService.findById(productId);
         if (product.isPresent()) {
             cartService.addProductToCart(productId, quantity);
