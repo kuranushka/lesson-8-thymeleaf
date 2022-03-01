@@ -1,0 +1,28 @@
+<nav aria-label="..." id="pagination">
+    <ul class="pagination">
+        <th:block>
+            <li class="page-item" th:if="${page} > 0">
+                <a class="page-link" th:href="@{/app/products(page=${page} - 1)}">Previous</a>
+            </li>
+            <li class="page-item disabled" th:unless="${page} > 0">
+                <a class="page-link" href="#">Previous</a>
+            </li>
+            <li class="page-item" th:if="${page} > 0">
+                <a class="page-link" th:text="${page}" th:href="@{/app/products(page=${page} - 1)}"></a>
+            </li>
+            <li class="page-item active">
+                <a class="page-link" th:text="${page} + 1"
+                   th:href="@{/app/products(page=${page})}"></a>
+            </li>
+            <li class="page-item" th:if="(${page} + 1) < ${totalPages}">
+                <a class="page-link" th:text="${page} + 2" th:href="@{/app/products(page=${page} + 1)}"></a>
+            </li>
+            <li class="page-item" th:if="(${page} + 1) < ${totalPages}">
+                <a class="page-link" th:href="@{/app/products(page=${page} + 1)}">Next</a>
+            </li>
+            <li class="page-item disabled" th:unless="(${page} + 1) < ${totalPages}">
+                <a class="page-link" th:href="@{/app/products(page=${page} + 1)}">Next</a>
+            </li>
+        </th:block>
+    </ul>
+</nav>
