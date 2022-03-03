@@ -20,7 +20,7 @@
                 <td th:text="${product.cost}"></td>
 
                 <form th:if="${product.status == T(ru.kuranov.lesson8thymeleaf.entity.Status).ACTIVE}" method="post"
-                      action="/app/products/addtocart">
+                      th:action="@{/app/products/addtocart}">
                     <td>
                         <div class="mb-3">
                             <input type="text" class="form-control" name="quantity" placeholder="0"/>

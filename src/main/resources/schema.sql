@@ -1,6 +1,9 @@
 drop table if exists cart_products cascade;
 drop table if exists product;
 drop table if exists cart;
+drop table if exists user_authorities cascade;
+drop table if exists account_user;
+drop table if exists authorities;
 
 create table product
 (
@@ -31,32 +34,36 @@ create table cart
 
 create table cart_products
 (
-    cart_id      bigint primary key,
+    cart_id      bigint,
     products     bigint,
     products_key bigint,
+    primary key (cart_id, products_key),
     constraint fk_cart foreign key (cart_id) references cart (id),
     constraint fk_product foreign key (products_key) references product (id)
 );
 
-create table usr
+create table account_user
 (
-    id       bigserial primary key,
-    username varchar(255) not null,
-    password varchar(255) not null,
-    enabled  boolean default true
+    id                      bigserial primary key,
+    username                varchar(255) not null,
+    password                varchar(255) not null,
+    account_non_expired     boolean default true,
+    account_non_locked      boolean default true,
+    credentials_non_expired boolean default true,
+    enabled                 boolean default true
 );
 
-create table roles
+create table authorities
 (
     id   bigserial primary key,
     role varchar(50) not null
 );
 
-create table user_roles
+create table user_authorities
 (
-    user_id bigint,
-    role_id bigint,
+    user_id bigint not null,
+    role_id bigint not null,
     primary key (user_id, role_id),
-    constraint fk_user_roles_user foreign key (user_id) references usr (id),
-    constraint fk_user_roles_role foreign key (role_id) references roles (id)
+    constraint fk_user_roles_user foreign key (user_id) references account_user (id),
+    constraint fk_user_roles_role foreign key (role_id) references authorities (id)
 );

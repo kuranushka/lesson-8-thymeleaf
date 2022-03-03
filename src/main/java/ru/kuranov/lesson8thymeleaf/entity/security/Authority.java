@@ -1,7 +1,6 @@
 package ru.kuranov.lesson8thymeleaf.entity.security;
 
 import lombok.*;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
@@ -13,9 +12,8 @@ import java.util.Set;
 @Getter
 @Setter
 @Builder
-@EntityListeners(AuditingEntityListener.class)
-@Table(name = "roles")
-public class Role implements GrantedAuthority {
+@Table(name = "authorities")
+public class Authority implements GrantedAuthority {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -24,8 +22,8 @@ public class Role implements GrantedAuthority {
     @Column(name = "role")
     private String role;
 
-    @ManyToMany(mappedBy = "roles")
-    private Set<User> users;
+    @ManyToMany(mappedBy = "authorities")
+    private Set<AccountUser> accountUsers;
 
     @Override
     public String getAuthority() {

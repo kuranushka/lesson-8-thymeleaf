@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-warning" id="header">
     <div class="container-fluid">
-        <a class="navbar-brand" href="/app/products">GB shop</a>
+        <a class="navbar-brand" th:href="@{/app/products}">GB shop</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -8,15 +8,19 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/app/products">ALL PRODUCTS</a>
+                    <a class="nav-link active" aria-current="page" th:href="@{/app/products}">ALL PRODUCTS</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAuthority('ADMIN')">
+                    <a class="nav-link" th:href="@{/app/products/add}">ADD NEW PRODUCT</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/app/products/add">ADD NEW PRODUCT</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/app/products/cart">CART</a>
+                    <a class="nav-link" th:href="@{/app/products/cart}">CART</a>
                 </li>
             </ul>
+            <h3 sec:authentication="name"></h3>
+            <a sec:authorize="isAuthenticated()" class="btn btn-secondary ms-3" th:href="@{/logout}" role="button">LOGOUT</a>
+            <a sec:authorize="!isAuthenticated()" class="btn btn-success ms-3" th:href="@{/login}"
+               role="button">LOGIN</a>
         </div>
     </div>
 </nav>

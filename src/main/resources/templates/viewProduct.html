@@ -17,8 +17,10 @@
     <h2 th:text="${product.cost}"/>
 </div>
 <div class="mx-5 my-5">
-    <a class="btn btn-primary" th:href="@{/app/products/edit/{id}(id=${product.id})}" role="button">EDIT PRODUCT</a>
-    <a class="btn btn-primary" th:href="@{/app/products/delete/{id}(id=${product.id})}" role="button">DELETE PRODUCT</a>
+    <a class="btn btn-primary" sec:authorize="hasAuthority('ADMIN')"
+       th:href="@{/app/products/edit/{id}(id=${product.id})}" role="button">EDIT PRODUCT</a>
+    <a class="btn btn-primary" sec:authorize="hasAuthority('ADMIN')"
+       th:href="@{/app/products/delete/{id}(id=${product.id})}" role="button">DELETE PRODUCT</a>
 </div>
 <div th:insert="/elements/footer :: #footer"></div>
 </body>

@@ -12,6 +12,8 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Getter
@@ -21,6 +23,7 @@ public class CartService {
     private final ProductService productService;
     private Map<Long, Long> productsInCart;
     private BigDecimal totalCartCost;
+    private Long cartId;
 
     public CartService(CartRepository cartRepository, ProductService productService) {
         this.cartRepository = cartRepository;
@@ -31,6 +34,7 @@ public class CartService {
 
     public void saveCart() {
         Cart cart = Cart.builder()
+                .id(cartId)
                 .totalCost(totalCartCost)
                 .products(getCartProducts())
                 .status(Status.ACTIVE)
@@ -50,6 +54,22 @@ public class CartService {
             productsInCart.put(productId, quantity);
         }
         updateTotalCost();
+        Map<Product, Long> cartProducts = getCartProducts();
+        if (cartId == null) {
+            Cart cart = Cart.builder()
+                    .products(cartProducts)
+                    .status(Status.ACTIVE)
+                    .totalCost(totalCartCost)
+                    .build();
+            cartRepository.save(cart);
+        } else {
+            Optional<Cart> cart = cartRepository.findById(cartId);
+            if (cart.isPresent()) {
+                cart.get().setProducts(cartProducts);
+                cart.get().setTotalCost(totalCartCost);
+                cartRepository.save(cart.get());
+            }
+        }
     }
 
     public Map<Product, Long> updateCart(Long productId, Long quantity) {
@@ -63,11 +83,10 @@ public class CartService {
     }
 
     public void deleteProductFromCart(Long productToDelete) {
-        for (Map.Entry<Long, Long> entry : productsInCart.entrySet()) {
-            if (entry.getKey().equals(productToDelete)) {
-                productsInCart.remove(entry.getKey());
-            }
-        }
+        Map<Long, Long> filteredProduct = productsInCart.entrySet().stream()
+                .filter(entry -> !entry.getKey().equals(productToDelete))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        productsInCart = filteredProduct;
         updateTotalCost();
     }
 

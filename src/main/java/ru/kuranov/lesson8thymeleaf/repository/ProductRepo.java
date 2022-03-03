@@ -20,7 +20,7 @@ public interface ProductRepo extends JpaRepository<Product, Long> {
     @Query(value = "select max(cost) from product", nativeQuery = true)
     Long findMaxCost();
 
-    @Query(value="select * from Product p where p.cost between :min and :max", nativeQuery = true)
+    @Query(value = "select * from Product p where p.cost between :min and :max", nativeQuery = true)
     Page<Product> findAllPagingAndSortingAndFiltering(Pageable pageable, Long min, Long max);
 
     void deleteById(Long id);

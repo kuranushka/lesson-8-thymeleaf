@@ -28,7 +28,7 @@
             <td><a th:href="@{/app/products/{id}(id=${product.key.id})}" th:text="${product.key.title}"></a></td>
             <td th:text="${product.key.manufacturer}"></td>
             <td th:text="${product.key.cost}"></td>
-            <form method="post" action="/app/products/editcart">
+            <form method="post" th:action="@{/app/products/editcart}">
                 <td>
                     <div class="mb-3">
                         <input type="text" class="form-control" name="quantity" th:placeholder="${product.value}"/>
@@ -50,7 +50,7 @@
     </tbody>
 </table>
 <h2 th:text="'TOTAL COST: ' + ${totalCost}"/>
-<a class="btn btn-primary" href="/app/products/savecart" role="button">SAVE CART AND PAY</a>
+<a class="btn btn-primary" th:href="@{/app/products/savecart}" role="button">SAVE CART AND PAY</a>
 
 <div th:insert="/elements/footer :: #footer"></div>
 </body>
