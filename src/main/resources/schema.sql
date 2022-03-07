@@ -1,9 +1,11 @@
 drop table if exists cart_products cascade;
+drop table if exists user_role cascade;
+drop table if exists role_authority cascade;
 drop table if exists product;
 drop table if exists cart;
-drop table if exists user_authorities cascade;
+drop table if exists authority;
 drop table if exists account_user;
-drop table if exists authorities;
+drop table if exists account_role;
 
 create table product
 (
@@ -44,26 +46,45 @@ create table cart_products
 
 create table account_user
 (
-    id                      bigserial primary key,
-    username                varchar(255) not null,
-    password                varchar(255) not null,
+    id                      bigserial primary key not null,
+    username                varchar(255)          not null,
+    password                varchar(255)          not null,
     account_non_expired     boolean default true,
     account_non_locked      boolean default true,
     credentials_non_expired boolean default true,
     enabled                 boolean default true
 );
 
-create table authorities
+create table authority
 (
-    id   bigserial primary key,
-    role varchar(50) not null
+    id         bigserial primary key,
+    permission varchar(255) not null
 );
 
-create table user_authorities
+create table user_role
 (
     user_id bigint not null,
     role_id bigint not null,
     primary key (user_id, role_id),
     constraint fk_user_roles_user foreign key (user_id) references account_user (id),
-    constraint fk_user_roles_role foreign key (role_id) references authorities (id)
+    constraint fk_user_roles_role foreign key (role_id) references authority (id)
+);
+
+create table account_role
+(
+    id   bigserial primary key,
+    name varchar(255) not null unique
+);
+
+
+create table role_authority
+(
+    authority_id bigint,
+    role_id      bigint,
+    primary key (authority_id, role_id),
+    constraint fk_role_authority_authority
+        foreign key (authority_id) references authority (id),
+    constraint fk_role_authority_role
+        foreign key (role_id) references account_role (id)
+
 );

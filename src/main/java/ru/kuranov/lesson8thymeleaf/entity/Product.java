@@ -52,7 +52,7 @@ public class Product {
     private String createdBy;
 
     @CreatedDate
-    @Column(name = "created_date",nullable = false, updatable = false)
+    @Column(name = "created_date", nullable = false, updatable = false)
     private LocalDateTime createdDate;
 
     @LastModifiedBy

@@ -12,21 +12,24 @@ import java.util.Set;
 @Getter
 @Setter
 @Builder
-@Table(name = "authorities")
+@Table(name = "authority")
 public class Authority implements GrantedAuthority {
+
+    static final long serialVersionUID = -5_702_839_107_845_469_980L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "role")
-    private String role;
+    @Column(name = "permission")
+    private String permission;
 
     @ManyToMany(mappedBy = "authorities")
-    private Set<AccountUser> accountUsers;
+    private Set<AccountRole> roles;
 
     @Override
     public String getAuthority() {
-        return this.role;
+        return this.permission;
     }
 }

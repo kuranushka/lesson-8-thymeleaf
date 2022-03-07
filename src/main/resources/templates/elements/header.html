@@ -11,6 +11,9 @@
                     <a class="nav-link active" aria-current="page" th:href="@{/app/products}">ALL PRODUCTS</a>
                 </li>
                 <li class="nav-item" sec:authorize="hasAuthority('ADMIN')">
+                    <a class="nav-link active" aria-current="page" th:href="@{/app/users}">ALL USERS</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAuthority('product.create')">
                     <a class="nav-link" th:href="@{/app/products/add}">ADD NEW PRODUCT</a>
                 </li>
                 <li class="nav-item">
@@ -20,7 +23,7 @@
             <h3 sec:authentication="name"></h3>
             <a sec:authorize="isAuthenticated()" class="btn btn-secondary ms-3" th:href="@{/logout}" role="button">LOGOUT</a>
             <a sec:authorize="!isAuthenticated()" class="btn btn-success ms-3" th:href="@{/login}"
-               role="button">LOGIN</a>
+               role="button">LOGIN / REGISTRATION</a>
         </div>
     </div>
 </nav>

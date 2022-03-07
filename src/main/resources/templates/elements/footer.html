@@ -2,7 +2,7 @@
     <li class="nav-item">
         <a class="nav-link" th:href="@{/app/products}">ALL PRODUCTS</a>
     </li>
-    <li class="nav-item">
+    <li sec:authorize="hasAuthority('product.create')" class="nav-item">
         <a class="nav-link" th:href="@{/app/products/add}">ADD NEW PRODUCT</a>
     </li>
     <li class="nav-item">

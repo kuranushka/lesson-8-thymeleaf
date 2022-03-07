@@ -2,11 +2,18 @@ package ru.kuranov.lesson8thymeleaf.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.kuranov.lesson8thymeleaf.entity.Product;
+import ru.kuranov.lesson8thymeleaf.entity.dto.ProductDto;
 import ru.kuranov.lesson8thymeleaf.service.CartService;
 import ru.kuranov.lesson8thymeleaf.service.ProductService;
 
+import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.Map;
 import java.util.Optional;
@@ -24,13 +31,17 @@ public class CartController {
     }
 
     @PostMapping("/app/products/addtocart")
-    public String addToCart(@RequestParam Long productId, @RequestParam(name = "quantity", required = false) Long quantity) {
-        if (quantity == null || quantity == 0) {
+    public String addToCart(@Valid ProductDto productDto,
+                            BindingResult bindingResult,
+                            RedirectAttributes attributes) {
+
+        if (bindingResult.hasErrors()) {
+            attributes.addFlashAttribute("errorMessage", getError());
             return "redirect:/app/products";
         }
-        Optional<Product> product = productService.findById(productId);
+        Optional<Product> product = productService.findById(productDto.getId());
         if (product.isPresent()) {
-            cartService.addProductToCart(productId, quantity);
+            cartService.addProductToCart(productDto.getId(), productDto.getQuantity());
         }
         return "redirect:/app/products";
     }
@@ -40,21 +51,24 @@ public class CartController {
         Map<Product, Long> products = cartService.getCartProducts();
         updateTotalCost(model);
         model.addAttribute("products", products);
-        return "cart";
+        return "cart-view";
     }
 
 
     @PostMapping("/app/products/editcart")
-    public String editCart(@RequestParam(name = "quantity", required = false) Long quantity,
-                           @RequestParam(name = "productId", required = false) Long productId,
+    public String editCart(@Valid ProductDto productDto,
+                           BindingResult bindingResult,
+                           RedirectAttributes attributes,
                            Model model) {
-        if (quantity > 0 && productId >= 0) {
-            Map<Product, Long> products = cartService.updateCart(productId, quantity);
+
+        if (bindingResult.hasErrors()) {
+            attributes.addFlashAttribute("errorMessage", getError());
+            return "redirect:/app/products/cart";
+        } else {
+            Map<Product, Long> products = cartService.updateCart(productDto.getId(), productDto.getQuantity());
             updateTotalCost(model);
             model.addAttribute("products", products);
-            return "cart";
-        } else {
-            return "redirect:/app/products/cart";
+            return "cart-view";
         }
     }
 
@@ -72,7 +86,7 @@ public class CartController {
             cartService.saveCart();
             model.addAttribute("message", "THANK YOU!");
         }
-        return "cartWasSaved";
+        return "cart-saved";
     }
 
 
@@ -80,5 +94,9 @@ public class CartController {
     private void updateTotalCost(Model model) {
         BigDecimal totalCost = cartService.getTotalCartCost();
         model.addAttribute("totalCost", totalCost);
+    }
+
+    private String getError() {
+        return "QUANTITY MUST BE A NUMBER AND GREATER THAN 0";
     }
 }

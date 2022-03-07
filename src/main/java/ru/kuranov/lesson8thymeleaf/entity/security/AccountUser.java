@@ -1,10 +1,14 @@
 package ru.kuranov.lesson8thymeleaf.entity.security;
 
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @NoArgsConstructor
@@ -28,9 +32,9 @@ public class AccountUser implements UserDetails {
 
     @Singular
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    @JoinTable(name = "user_authorities", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
-    private Set<Authority> authorities;
+    private Set<AccountRole> roles;
 
     @Builder.Default
     @Column(name = "account_non_expired")
@@ -47,5 +51,20 @@ public class AccountUser implements UserDetails {
     @Builder.Default
     @Column(name = "enabled")
     private boolean enabled = true;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        Set<GrantedAuthority> authorities = this.roles.stream()
+                .map(AccountRole::getAuthorities)
+                .flatMap(Set::stream)
+                .collect(Collectors.toSet());
+        authorities.addAll(mapRolesToAuthorities(this.roles));
+        return authorities;
+
+    }
+
+    private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<AccountRole> roles) {
+        return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
+    }
 }
 

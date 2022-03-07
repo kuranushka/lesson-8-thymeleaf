@@ -9,6 +9,7 @@
 <body>
 <div th:insert="/elements/header :: #header"></div>
 <h2>CART</h2>
+<th:block th:text="${errorMessage}"></th:block>
 <table class="table mx-auto">
     <thead>
     <tr>
@@ -28,11 +29,13 @@
             <td><a th:href="@{/app/products/{id}(id=${product.key.id})}" th:text="${product.key.title}"></a></td>
             <td th:text="${product.key.manufacturer}"></td>
             <td th:text="${product.key.cost}"></td>
-            <form method="post" th:action="@{/app/products/editcart}">
+            <form sc:autorize="hasAuthority('product.update.in.cart')" method="post"
+                  th:action="@{/app/products/editcart}"
+                  th:object="${productDto}">
                 <td>
                     <div class="mb-3">
                         <input type="text" class="form-control" name="quantity" th:placeholder="${product.value}"/>
-                        <input type="hidden" name="productId" th:value="${product.key.id}">
+                        <input type="hidden" name="id" th:value="${product.key.id}">
                     </div>
                 </td>
                 <td>
@@ -40,7 +43,8 @@
                 </td>
             </form>
             <td>
-                <form method="post" th:action="@{/app/products/deletefromcart/{id}(id=${product.key.id})}">
+                <form sc:autorize="hasAuthority('product.delete.from.cart')" method="post"
+                      th:action="@{/app/products/deletefromcart/{id}(id=${product.key.id})}">
                     <button type="submit" class="btn btn-primary">DELETE</button>
                 </form>
             </td>
@@ -50,7 +54,8 @@
     </tbody>
 </table>
 <h2 th:text="'TOTAL COST: ' + ${totalCost}"/>
-<a class="btn btn-primary" th:href="@{/app/products/savecart}" role="button">SAVE CART AND PAY</a>
+<a sc:autorize="hasAuthority('save.cart')" class="btn btn-primary" th:href="@{/app/products/savecart}" role="button">SAVE
+    CART AND PAY</a>
 
 <div th:insert="/elements/footer :: #footer"></div>
 </body>

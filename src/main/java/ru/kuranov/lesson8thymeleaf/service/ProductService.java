@@ -53,11 +53,29 @@ public class ProductService {
         return productRepo.findAllPagingAndSortingAndFiltering(pageable, min, max);
     }
 
+
     public void save(Product product) {
-        productRepo.save(product);
+        if (product.getId() == null) {
+            productRepo.save(product);
+        }
+        Optional<Product> optionalProduct = productRepo.findById(product.getId());
+        if (optionalProduct.isEmpty()) {
+            productRepo.save(product);
+            return;
+        }
+        optionalProduct.get().setTitle(product.getTitle());
+        optionalProduct.get().setManufacturer(product.getManufacturer());
+        optionalProduct.get().setDescription(product.getDescription());
+        optionalProduct.get().setCost(product.getCost());
+        optionalProduct.get().setStatus(product.getStatus());
+        productRepo.save(optionalProduct.get());
     }
 
     public void deleteById(Long id) {
+        Optional<Product> product = productRepo.findById(id);
+        if (product.isEmpty()) {
+            return;
+        }
         productRepo.deleteById(id);
     }
 }

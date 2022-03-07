@@ -3,7 +3,6 @@ package ru.kuranov.lesson8thymeleaf.controller.util;
 
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import ru.kuranov.lesson8thymeleaf.service.ProductService;
 
@@ -89,7 +88,7 @@ public class FilterSolver {
     }
 
     public void memoryProductsOnPage(Optional<Integer> productsOnPageOptional) {
-        if (productsOnPageOptional.isEmpty()){
+        if (productsOnPageOptional.isEmpty()) {
             if (isProductsOnPageMemorized) {
                 return;
             }

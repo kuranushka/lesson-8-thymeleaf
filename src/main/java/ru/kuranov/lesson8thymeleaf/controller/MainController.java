@@ -5,12 +5,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.kuranov.lesson8thymeleaf.controller.util.FilterSolver;
 import ru.kuranov.lesson8thymeleaf.entity.Product;
-import ru.kuranov.lesson8thymeleaf.entity.Status;
 import ru.kuranov.lesson8thymeleaf.service.ProductService;
 
 import java.util.List;
@@ -36,7 +34,7 @@ public class MainController {
                               @RequestParam Optional<String> sort,
                               @RequestParam Optional<Integer> quantityProductsOnPage,
                               @RequestParam(name = "resetFilter", required = false, defaultValue = "false") Boolean resetFilter,
-                              @RequestParam(name = "page", required = false, defaultValue = "0") Integer page){
+                              @RequestParam(name = "page", required = false, defaultValue = "0") Integer page) {
 
         filterSolver.resetFilter(resetFilter);
 
@@ -47,7 +45,7 @@ public class MainController {
         Integer productsOnPage = filterSolver.getProductsOnPageMemorized();
 
         Page<Product> productPages = productService
-                .findAllPagingAndSortingAndFiltering(page, productsOnPage , minFilterCost, maxFilterCost, sortDirection);
+                .findAllPagingAndSortingAndFiltering(page, productsOnPage, minFilterCost, maxFilterCost, sortDirection);
         int totalPages = productPages.getTotalPages();
 
         List<Product> productList = productPages.getContent();
@@ -64,13 +62,11 @@ public class MainController {
         model.addAttribute("minFilterCost", minFilterCost);
         model.addAttribute("maxFilterCost", maxFilterCost);
 
-        return "viewAllProducts";
+        return "product-view-all";
     }
 
     @PostMapping("/app/products")
-    public String addProduct(@ModelAttribute Product product) {
-        product.setStatus(Status.ACTIVE);
-        productService.save(product);
+    public String startPage() {
         return "redirect:/app/products";
     }
 }
