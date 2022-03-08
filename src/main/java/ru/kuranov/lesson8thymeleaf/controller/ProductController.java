@@ -1,5 +1,6 @@
 package ru.kuranov.lesson8thymeleaf.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,11 +9,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import ru.kuranov.lesson8thymeleaf.controller.util.FilterSolver;
-import ru.kuranov.lesson8thymeleaf.entity.Product;
-import ru.kuranov.lesson8thymeleaf.entity.dto.ProductNewDto;
-import ru.kuranov.lesson8thymeleaf.entity.mapper.ProductMapper;
-import ru.kuranov.lesson8thymeleaf.service.ProductService;
+import ru.kuranov.lesson8thymeleaf.model.service.interfaces.ProductService;
+import ru.kuranov.lesson8thymeleaf.util.impl.FilterSolver;
+import ru.kuranov.lesson8thymeleaf.model.entity.Product;
+import ru.kuranov.lesson8thymeleaf.model.dto.product.ProductNewDto;
+import ru.kuranov.lesson8thymeleaf.model.mapper.interfaces.ProductMapper;
 
 import javax.validation.Valid;
 import java.util.Optional;
@@ -20,17 +21,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Controller
+@RequiredArgsConstructor
 public class ProductController {
 
     private final ProductService productService;
     private final FilterSolver filterSolver;
     private final ProductMapper productMapper;
-
-    public ProductController(ProductService productService, FilterSolver filterSolver, ProductMapper productMapper) {
-        this.productService = productService;
-        this.filterSolver = filterSolver;
-        this.productMapper = productMapper;
-    }
 
     @GetMapping("/app/products/{id}")
     public String viewProduct(Model model, @PathVariable Long id) {

@@ -1,5 +1,6 @@
 package ru.kuranov.lesson8thymeleaf.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -8,10 +9,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import ru.kuranov.lesson8thymeleaf.entity.Product;
-import ru.kuranov.lesson8thymeleaf.entity.dto.ProductDto;
-import ru.kuranov.lesson8thymeleaf.service.CartService;
-import ru.kuranov.lesson8thymeleaf.service.ProductService;
+import ru.kuranov.lesson8thymeleaf.model.entity.Product;
+import ru.kuranov.lesson8thymeleaf.model.dto.product.ProductDto;
+import ru.kuranov.lesson8thymeleaf.model.service.interfaces.CartService;
+import ru.kuranov.lesson8thymeleaf.model.service.interfaces.ProductService;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
@@ -19,16 +20,12 @@ import java.util.Map;
 import java.util.Optional;
 
 @Controller
+@RequiredArgsConstructor
 public class CartController {
 
     private final ProductService productService;
     private final CartService cartService;
 
-
-    public CartController(ProductService productService, CartService cartService) {
-        this.productService = productService;
-        this.cartService = cartService;
-    }
 
     @PostMapping("/app/products/addtocart")
     public String addToCart(@Valid ProductDto productDto,

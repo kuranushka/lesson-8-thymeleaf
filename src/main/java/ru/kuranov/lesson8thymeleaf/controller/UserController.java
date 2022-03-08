@@ -5,10 +5,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ru.kuranov.lesson8thymeleaf.entity.security.AccountRole;
-import ru.kuranov.lesson8thymeleaf.entity.security.AccountUser;
-import ru.kuranov.lesson8thymeleaf.service.RoleService;
-import ru.kuranov.lesson8thymeleaf.service.UserService;
+import ru.kuranov.lesson8thymeleaf.model.security.AccountRole;
+import ru.kuranov.lesson8thymeleaf.model.security.AccountUser;
+import ru.kuranov.lesson8thymeleaf.model.service.interfaces.RoleService;
+import ru.kuranov.lesson8thymeleaf.model.service.interfaces.UserService;
 
 import java.util.List;
 import java.util.Optional;

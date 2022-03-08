@@ -10,11 +10,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import ru.kuranov.lesson8thymeleaf.entity.dto.AccountUserRegistrationDto;
-import ru.kuranov.lesson8thymeleaf.entity.security.AccountRole;
-import ru.kuranov.lesson8thymeleaf.entity.security.AccountUser;
-import ru.kuranov.lesson8thymeleaf.service.AccountService;
-import ru.kuranov.lesson8thymeleaf.service.RoleService;
+import ru.kuranov.lesson8thymeleaf.model.dto.account.AccountUserRegistrationDto;
+import ru.kuranov.lesson8thymeleaf.model.security.AccountRole;
+import ru.kuranov.lesson8thymeleaf.model.security.AccountUser;
+import ru.kuranov.lesson8thymeleaf.model.service.interfaces.AccountService;
+import ru.kuranov.lesson8thymeleaf.model.service.interfaces.RoleService;
 
 import javax.validation.Valid;
 import java.util.Collections;

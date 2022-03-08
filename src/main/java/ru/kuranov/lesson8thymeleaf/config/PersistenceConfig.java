@@ -10,8 +10,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @EnableTransactionManagement
-@EntityScan("ru.kuranov.lesson8thymeleaf.entity")
-@EnableJpaRepositories("ru.kuranov.lesson8thymeleaf.repository")
+@EntityScan("ru.kuranov.lesson8thymeleaf.model")
+@EnableJpaRepositories("ru.kuranov.lesson8thymeleaf.model")
 @EnableJpaAuditing(auditorAwareRef = "auditorProvider")
 public class PersistenceConfig {
 
