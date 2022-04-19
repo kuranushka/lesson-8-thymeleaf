@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>CART</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+</head>
+<body>
+<div th:insert="/elements/header :: #header"></div>
+<h2>CART</h2>
+<th:block th:text="${errorMessage}"></th:block>
+<table class="table mx-auto">
+    <thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">TITLE</th>
+        <th scope="col">MANUFACTURER</th>
+        <th scope="col">PRICE</th>
+        <th scope="col">QUANTITY</th>
+        <th scope="col">EDIT</th>
+        <th scope="col">DELETE</th>
+    </tr>
+    </thead>
+    <tbody>
+    <th:block th:each="product, index : ${products}">
+        <tr>
+            <th scope="row" th:text="${index.count}"></th>
+            <td><a th:href="@{/app/products/{id}(id=${product.key.id})}" th:text="${product.key.title}"></a></td>
+            <td th:text="${product.key.manufacturer}"></td>
+            <td th:text="${product.key.cost}"></td>
+            <form sc:autorize="hasAuthority('product.update.in.cart')" method="post"
+                  th:action="@{/app/products/editcart}"
+                  th:object="${productDto}">
+                <td>
+                    <div class="mb-3">
+                        <input type="text" class="form-control" name="quantity" th:placeholder="${product.value}"/>
+                        <input type="hidden" name="id" th:value="${product.key.id}">
+                    </div>
+                </td>
+                <td>
+                    <button type="submit" class="btn btn-primary">SET QUANTITY</button>
+                </td>
+            </form>
+            <td>
+                <form sc:autorize="hasAuthority('product.delete.from.cart')" method="post"
+                      th:action="@{/app/products/deletefromcart/{id}(id=${product.key.id})}">
+                    <button type="submit" class="btn btn-primary">DELETE</button>
+                </form>
+            </td>
+        </tr>
+        </th:each>
+    </th:block>
+    </tbody>
+</table>
+<h2 th:text="'TOTAL COST: ' + ${totalCost}"/>
+<a sc:autorize="hasAuthority('save.cart')" class="btn btn-primary" th:href="@{/app/products/savecart}" role="button">SAVE
+    CART AND PAY</a>
+
+<div th:insert="/elements/footer :: #footer"></div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
+</html>

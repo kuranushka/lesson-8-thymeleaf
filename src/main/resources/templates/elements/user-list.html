@@ -1,0 +1,70 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div id="list">
+    <table class="table ms-3">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">ID</th>
+            <th scope="col">USERNAME</th>
+            <th scope="col">ROLES</th>
+            <th scope="col">ACCOUNT NON EXPIRED</th>
+            <th scope="col">ACCOUNT NON LOCKED</th>
+            <th scope="col">CREDENTIALS NON EXPIRED</th>
+            <th scope="col">ENABLED</th>
+            <th scope="col">OPERATION</th>
+        </tr>
+        </thead>
+        <tbody>
+        <th:block th:each="user, index : ${users}">
+            <tr>
+                <th scope="row" th:text="${index.count}"></th>
+                <td th:text="${user.id}"></td>
+                <td><a th:href="@{/app/users/edit/{id}(id=${user.id})}" th:text="${user.username}"></a></td>
+                <td>
+                    <th:block th:each="role, iterStat : ${user.roles}">
+                        <div th:text="!${iterStat.last} ? ${role.name} + ',': ${role.name}"></div>
+                    </th:block>
+                </td>
+                <td>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" th:checked="${user.accountNonExpired}" checked
+                               disabled>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" th:checked="${user.accountNonLocked}" checked
+                               disabled>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" th:checked="${user.credentialsNonExpired}"
+                               checked disabled>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" th:checked="${user.enabled}" checked disabled>
+                    </div>
+                </td>
+                <td>
+                    <a class="btn btn-primary"
+                       th:href="@{/app/users/edit/{id}(id=${user.id})}" role="button">EDIT</a>
+                </td>
+                <form method="post"
+                      th:action="@{/app/users/delete/{id}(id=${user.id})}">
+                    <div class="mb-3">
+                        <input type="hidden" name="id" th:value="${user.id}">
+                    </div>
+                    <td>
+                        <button type="submit" class="btn btn-primary">DELETE</button>
+                    </td>
+                </form>
+            </tr>
+            </th:each>
+        </th:block>
+        </tbody>
+    </table>
+</div>
+
